@@ -461,6 +461,7 @@ def train(args, logger):
                 global_step += 1
 
                 if global_step % args.checkpointing_period == 0:
+                    accelerator.wait_for_everyone()
                     save_path = os.path.join(args.output_dir, f"checkpoint-{global_step}")
                     accelerator.save_state(save_path)
                     ema_save_path = os.path.join(save_path, f"ema")
