@@ -467,8 +467,10 @@ def train(args, logger):
                     ema_save_path = os.path.join(save_path, f"ema")
                     accelerator.save_model(ema_rdt, ema_save_path)
                     logger.info(f"Saved state to {save_path}")
+                    accelerator.wait_for_everyone()
 
                 if args.sample_period > 0 and global_step % args.sample_period == 0:
+                    accelerator.wait_for_everyone()
                     sample_loss_for_log = log_sample_res(
                         text_encoder,
                         vision_encoder,
@@ -480,8 +482,10 @@ def train(args, logger):
                         sample_dataloader,
                         logger,
                     )
+                    print(global_step, sample_loss_for_log)
                     logger.info(sample_loss_for_log)
                     accelerator.log(sample_loss_for_log, step=global_step)
+                    accelerator.wait_for_everyone()
 
             logs = {"loss": loss.detach().item(), "lr": lr_scheduler.get_last_lr()[0]}
             progress_bar.set_postfix(**logs)
