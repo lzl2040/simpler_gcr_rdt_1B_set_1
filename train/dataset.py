@@ -14,8 +14,8 @@ from PIL import Image
 import transformers
 
 from data.filelock import FileLock
-from data.simpler_vla_dataset import HDF5VLADataset
-
+# from data.simpler_vla_dataset import HDF5VLADataset
+from data.libero_vla_dataset import HDF5VLADataset
 # from data.pizza_vla_dataset import HDF5VLADataset
 # from data.hdf5_vla_dataset import HDF5VLADataset
 from train.image_corrupt import image_corrupt
@@ -429,7 +429,7 @@ class DataCollatorForVLAConsumerDataset(object):
             else:
                 lang_embeds.append(instance["lang_embed"])
                 lang_embed_lens.append(instance["lang_embed"].shape[0])
-            
+            # print(torch.stack(instance["images"], dim=0).shape)
             batch["images"].append(torch.stack(instance["images"], dim=0))
             batch["data_indices"].append(instance["data_idx"])
             batch["ctrl_freqs"].append(instance["ctrl_freq"])
@@ -443,6 +443,7 @@ class DataCollatorForVLAConsumerDataset(object):
             # if key == 'states':
             #     for data in batch[key]:
             #         print(data.shape)
+            
             batch[key] = torch.stack(batch[key], dim=0)
         
         batch["ctrl_freqs"] = torch.tensor(batch["ctrl_freqs"])

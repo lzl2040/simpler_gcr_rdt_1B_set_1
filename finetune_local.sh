@@ -6,11 +6,11 @@ export NCCL_NVLS_ENABLE=0
 
 # export PRETRAIN_MODEL_PATH="/mnt/wangxiaofa/RDT_module_params/rdt_param/rdt-170m/"
 
-export VISION_ENCODER_NAME="/mnt/wangxiaofa/RDT_module_params/rdt_param/siglip-so400m-patch14-384"
-export TEXT_ENCODER_NAME="/mnt/wangxiaofa/RDT_module_params/rdt_param/t5-v1_1-xxl"
+export VISION_ENCODER_NAME="/Data/lzl/weights/rdt_param/siglip-so400m-patch14-384"
+export TEXT_ENCODER_NAME="/Data/lzl/weights/rdt_param/t5-v1_1-xxl"
 # export OUTPUT_DIR="/mnt/wangxiaofa/rdt_checkpoint/170M_ac8_bs32x8_last_padding/"
-export OUTPUT_DIR="/mnt/wangxiaofa/rdt_checkpoint/hold_point/"
-export PRETRAIN_MODEL_PATH="/mnt/wangxiaofa/RDT_module_params/rdt_param/rdt-1b/"
+export OUTPUT_DIR="/Data/lzl/rdt_checkpoint/hold_point/"
+export PRETRAIN_MODEL_PATH="/Data/lzl/weights/rdt_param/rdt-1b/"
 
 # export TEXT_ENCODER_NAME="/datahdd_8T/vla_pizza/RDT_module_params/t5-v1_1-xxl/"
 # export VISION_ENCODER_NAME="/datahdd_8T/vla_pizza/RDT_module_params/siglip-so400m-patch14-384/"
@@ -20,7 +20,7 @@ export PRETRAIN_MODEL_PATH="/mnt/wangxiaofa/RDT_module_params/rdt_param/rdt-1b/"
 # export OUTPUT_DIR="/datahdd_8T/vla_pizza/rdt_checkpoint/1000M-ac16/"
 export CFLAGS="-I/usr/include"
 export LDFLAGS="-L/usr/lib/x86_64-linux-gnu"
-export CUTLASS_PATH="/path/to/cutlass"
+# export CUTLASS_PATH="/path/to/cutlass"
 
 export WANDB_PROJECT="robotics_diffusion_transformer"
 
@@ -44,7 +44,7 @@ deepspeed --hostfile=hostfile.txt main.py \
     --output_dir=$OUTPUT_DIR \
     --train_batch_size=6 \
     --sample_batch_size=4 \
-    --max_train_steps=1000000 \
+    --max_train_steps=60000 \
     --checkpointing_period=10000 \
     --sample_period=500 \
     --checkpoints_total_limit=100 \
