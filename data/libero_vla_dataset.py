@@ -200,7 +200,7 @@ class HDF5VLADataset:
     def __init__(self) -> None:
         # [Modify] The path to the HDF5 dataset directory
         # Each HDF5 file contains one episode
-        LEROBOT_DIR = "/Data/lerobot_data/simulated/libero_spatial_no_noops_lerobot"
+        LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_spatial_no_noops_lerobot"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
         self.DATASET_NAME = "libero"
