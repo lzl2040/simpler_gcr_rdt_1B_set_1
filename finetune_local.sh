@@ -44,7 +44,7 @@ deepspeed --hostfile=hostfile.txt main.py \
     --output_dir=$OUTPUT_DIR \
     --train_batch_size=6 \
     --sample_batch_size=4 \
-    --max_train_steps=60000 \
+    --max_train_steps=200000 \
     --checkpointing_period=10000 \
     --sample_period=500 \
     --checkpoints_total_limit=100 \
@@ -57,7 +57,7 @@ deepspeed --hostfile=hostfile.txt main.py \
     --state_noise_snr=40 \
     --load_from_hdf5 \
     --report_to=tensorboard \
-    --resume_from_checkpoint="latest"
+    --resume_from_checkpoint="latest" \
     # --precomp_lang_embed \
     # --mixed_precision="bf16" \
 

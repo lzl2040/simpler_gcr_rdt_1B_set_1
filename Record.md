@@ -5,3 +5,6 @@ pip install av==12.3.0 # AttributeError: 'ImportError' object has no attribute '
 pip install numpy==1.24.4 # RuntimeError: Could not infer dtype of numpy.uint8
 ```
 ## Finetuning
+you need revise:
+- ```/home/v-wangxiaofa/lzl/simpler_gcr_rdt_1B_set_1/data/libero_vla_dataset.py```: LEROBOT_DIR
+- ```/home/v-wangxiaofa/lzl/simpler_gcr_rdt_1B_set_1/train/dataset.py```: line 18 import

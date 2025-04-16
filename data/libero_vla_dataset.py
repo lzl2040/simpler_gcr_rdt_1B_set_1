@@ -215,6 +215,7 @@ class HDF5VLADataset:
         
         meta_path = os.path.join(LEROBOT_DIR, "meta")
         task_list_json = os.path.join(meta_path, "tasks.jsonl")
+        stat_json = os.path.join(meta_path, "stats.json")
         self.task_dict_list = {}
         with open(task_list_json, "r", encoding="utf-8") as f:
             for line in f:
@@ -223,6 +224,13 @@ class HDF5VLADataset:
                 task = task_dict["task"]
                 self.task_dict_list[task_id] = task
         
+        with open(stat_json, "r", encoding="utf-8") as f:
+            stats = json.load(f)
+            self.state_min = np.array(stats["observation.state"]["min"])
+            self.state_max = np.array(stats["observation.state"]["max"])
+            self.action_min = np.array(stats["action"]["min"])
+            self.action_max = np.array(stats["action"]["max"])
+
         self.image_views = ["observation.images.image", " observation.images.wrist_image"]
         self.video_root = os.path.join(LEROBOT_DIR, "videos")
         self.backend = get_safe_default_codec()
@@ -372,7 +380,7 @@ class HDF5VLADataset:
         
         # We randomly sample a timestep
         first_idx = 0
-        step_id = np.random.randint(0, num_steps-1)
+        step_id = np.random.randint(0, num_steps - 1)
 
         meta = {
             "dataset_name": self.DATASET_NAME,
