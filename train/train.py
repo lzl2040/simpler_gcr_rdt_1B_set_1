@@ -74,6 +74,7 @@ This is a RDT model derived from {base_model}. The weights were trained using [R
 
 def train(args, logger):
     # Read the config
+    os.environ['WANDB_API_KEY'] = '9e1c3ac77856b8ebb5573c4e1e250c84aabfb904'
     with open(args.config_path, "r") as fp:
         config = yaml.safe_load(fp)
 
@@ -333,7 +334,18 @@ def train(args, logger):
     # We need to initialize the trackers we use, and also store our configuration.
     # The trackers initializes automatically on the main process.
     if accelerator.is_main_process:
-        accelerator.init_trackers("roboticDiffusionTransformer", config=vars(args))
+        accelerator.init_trackers("roboticDiffusionTransformer", 
+                                  config=vars(args),
+                                  init_kwargs=
+                                    {
+                                        "wandb": 
+                                        {
+                                            "entity": "ucas_lzl",
+                                            
+                                            "name": "04-16-ft-libero-goal-1st"
+                                        }
+                                    }
+                                )
 
     # Train!
     total_batch_size = args.train_batch_size * accelerator.num_processes * args.gradient_accumulation_steps
