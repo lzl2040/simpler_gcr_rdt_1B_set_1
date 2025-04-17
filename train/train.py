@@ -342,7 +342,7 @@ def train(args, logger):
                                         {
                                             "entity": "ucas_lzl",
                                             
-                                            "name": "04-16-ft-libero-goal-1st"
+                                            "name": "04-17-ft-libero-goal-1st"
                                         }
                                     }
                                 )
