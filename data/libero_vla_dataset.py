@@ -235,7 +235,7 @@ class HDF5VLADataset:
             self.action_min = np.array(stats["action"]["min"])
             self.action_max = np.array(stats["action"]["max"])
 
-        self.image_views = ["observation.images.image", " observation.images.wrist_image"]
+        self.image_views = ["observation.images.image", "observation.images.wrist_image"]
         self.video_root = os.path.join(LEROBOT_DIR, "videos")
         self.backend = get_safe_default_codec()
         torchvision.set_video_backend(self.backend)
@@ -376,6 +376,7 @@ class HDF5VLADataset:
         actions = self.get_ortho6d_from_euler_angle(actions)
         states = self.get_ortho6d_from_euler_angle(states)
         frames = self.read_video(primary_video_path)
+        wrist_frames = self.read_video(wrist_video_path)
         # print(frames.shape)
         num_steps = len(actions)
         # [Optional] We drop too-short episode
@@ -441,16 +442,16 @@ class HDF5VLADataset:
         def unavailable_img():
             return np.zeros((self.IMG_HISORY_SIZE, 0, 0, 0))
         
-        def parse_img(id:int):
+        def parse_img(id, data):
             imgs = []
 
             if id > 0:
                 for i in range(max(id - self.IMG_HISORY_SIZE + 1, 0), id + 1):
-                    img = frames[i]
+                    img = data[i]
                     # img = img[:, 65:575, :]
                     imgs.append(img)
             else:
-                img = frames[id]
+                img = data[id]
                 imgs.append(img)
             imgs = np.stack(imgs)
             
@@ -463,17 +464,18 @@ class HDF5VLADataset:
             
             return imgs
         
-        cam_right_wrist = parse_img(step_id)
-        valid_len = min(step_id - first_idx + 1, self.IMG_HISORY_SIZE)
-        cam_right_wrist_mask = np.array(
-                [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
-            )
+        cam_high = parse_img(step_id, frames)
+        # For step_id = first_idx - 1, the valid_len should be one
+        valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
+        cam_high_mask = np.array(
+            [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
+        )
+        cam_right_wrist = parse_img(step_id, wrist_frames)
         
         cam_left_wrist = unavailable_img()
-        cam_left_wrist_mask = cam_right_wrist_mask.copy()
+        cam_left_wrist_mask = cam_high_mask.copy()
 
-        cam_high = unavailable_img()
-        cam_high_mask = cam_right_wrist_mask.copy()
+        cam_right_wrist_mask = cam_high_mask.copy()
 
         return True, {
             "meta": meta,
