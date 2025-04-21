@@ -20,7 +20,7 @@ export PRETRAIN_MODEL_PATH="/mnt/wangxiaofa/RDT_module_params/rdt_param/rdt-1b/"
 # export OUTPUT_DIR="/datahdd_8T/vla_pizza/rdt_checkpoint/1000M-ac16/"
 export CFLAGS="-I/usr/include"
 export LDFLAGS="-L/usr/lib/x86_64-linux-gnu"
-export CUTLASS_PATH="/path/to/cutlass"
+# export CUTLASS_PATH="/path/to/cutlass"
 
 export WANDB_PROJECT="robotics_diffusion_transformer"
 
