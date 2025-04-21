@@ -36,7 +36,7 @@ fi
 #     --deepspeed="./configs/zero2.json" \
 #     ...
 
-python main.py \
+deepspeed --hostfile=hostfile.txt main.py \
     --deepspeed="./configs/zero2fp32.json" \
     --pretrained_model_name_or_path=$PRETRAIN_MODEL_PATH \
     --pretrained_text_encoder_name_or_path=$TEXT_ENCODER_NAME \

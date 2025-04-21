@@ -1,7 +1,7 @@
 absl_py
-deepspeed==0.14.2   
-accelerate==0.30.1
+accelerate
 cv_bridge
+deepspeed
 diffusers==0.31.0
 h5py==3.11.0
 huggingface_hub==0.24.2
@@ -20,7 +20,14 @@ tensorflow_datasets==4.9.3
 tensorflow_graphics==2021.12.3
 timm==0.9.10
 tqdm
-transformers==4.41.0
+transformers
+torch
+opencv-python
+numpy
+torchvision
+pillow
+tqdm
+scipy
 pyarrow
 wandb
 tiktoken
