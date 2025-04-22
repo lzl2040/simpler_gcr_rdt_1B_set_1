@@ -46,7 +46,7 @@ python main.py \
     --sample_batch_size=4 \
     --max_train_steps=200000 \
     --checkpointing_period=10000 \
-    --sample_period=500 \
+    --sample_period=20000000 \
     --checkpoints_total_limit=100 \
     --lr_scheduler="constant" \
     --learning_rate=1e-4 \

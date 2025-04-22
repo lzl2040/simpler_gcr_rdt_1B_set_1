@@ -292,6 +292,13 @@ def train(args, logger):
         persistent_workers=True
     )
     
+    # for step, batch in enumerate(sample_dataloader):
+    #     # if step >= args.num_sample_batches:
+    #     #     break
+        
+    #     data_indices = batch["data_indices"]
+    #     print(data_indices)
+    
     # Scheduler and math around the number of training steps.
     overrode_max_train_steps = False
     num_update_steps_per_epoch = math.ceil(len(train_dataloader) / args.gradient_accumulation_steps)
