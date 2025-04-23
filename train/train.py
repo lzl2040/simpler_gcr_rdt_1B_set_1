@@ -416,6 +416,8 @@ def train(args, logger):
         if param.dtype != weight_dtype:
             param.data = param.data.to(weight_dtype)
     # Only show the progress bar once on each machine.
+    print(f"Current steps:{args.max_train_steps}")
+    print(f"Setting:{args}")
     progress_bar = tqdm(range(global_step, args.max_train_steps), disable=not accelerator.is_local_main_process)
     progress_bar.set_description("Steps")
 
