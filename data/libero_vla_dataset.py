@@ -202,7 +202,7 @@ class HDF5VLADataset:
         # Each HDF5 file contains one episode
         # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
         #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-        LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_all"
+        LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_goal_no_noops_lerobot"
         # LEROBOT_DIR = "/Data/lerobot_data/simulated/libero_all"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
@@ -217,6 +217,7 @@ class HDF5VLADataset:
                 if file.endswith(".parquet"):
                     self.file_paths.append(os.path.join(root, file))
         
+        print("There are {} episodes in the dataset.".format(len(self.file_paths)))
         meta_path = os.path.join(LEROBOT_DIR, "meta")
         task_list_json = os.path.join(meta_path, "tasks.jsonl")
         stat_json = os.path.join(meta_path, "stats.json")
@@ -362,7 +363,7 @@ class HDF5VLADataset:
         episode_name = file_path.split("/")[-1].split(".")[0]
         primary_video_path = os.path.join(self.video_root, chunk_name, self.image_views[0], f"{episode_name}.mp4")
         # print(primary_video_path)
-        wrist_video_path = os.path.join(self.video_root, chunk_name, self.image_views[1], f"{episode_name}.mp4")
+        # wrist_video_path = os.path.join(self.video_root, chunk_name, self.image_views[1], f"{episode_name}.mp4")
 
         data = pq.read_table(
             file_path,
@@ -376,8 +377,9 @@ class HDF5VLADataset:
         actions = self.get_ortho6d_from_euler_angle(actions)
         states = self.get_ortho6d_from_euler_angle(states)
         frames = self.read_video(primary_video_path)
-        wrist_frames = self.read_video(wrist_video_path)
+        # wrist_frames = self.read_video(wrist_video_path)
         # print(frames.shape)
+        # print(f"video path:{primary_video_path} {frames.shape} {states.shape} {instruction} {self.task_dict_list[task_ids[-1]]}")
         num_steps = len(actions)
         # [Optional] We drop too-short episode
         if num_steps < 30:
@@ -464,18 +466,25 @@ class HDF5VLADataset:
             
             return imgs
         
-        cam_high = parse_img(step_id, frames)
-        # For step_id = first_idx - 1, the valid_len should be one
-        valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
-        cam_high_mask = np.array(
-            [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
-        )
-        cam_right_wrist = parse_img(step_id, wrist_frames)
+        # cam_high = parse_img(step_id, frames)
+        # # For step_id = first_idx - 1, the valid_len should be one
+        # # valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
+        # valid_len = min(step_id - first_idx + 1, self.IMG_HISORY_SIZE)
+        # cam_high_mask = np.array(
+        #     [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
+        # )
+
+        cam_right_wrist = parse_img(step_id, frames)
+        valid_len = min(step_id - first_idx + 1, self.IMG_HISORY_SIZE)
+        cam_right_wrist_mask = np.array(
+                [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
+            )
         
         cam_left_wrist = unavailable_img()
-        cam_left_wrist_mask = cam_high_mask.copy()
+        cam_left_wrist_mask = cam_right_wrist_mask.copy()
 
-        cam_right_wrist_mask = cam_high_mask.copy()
+        cam_high = unavailable_img()
+        cam_high_mask = cam_right_wrist_mask.copy()
 
         return True, {
             "meta": meta,

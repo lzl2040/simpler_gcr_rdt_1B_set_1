@@ -5,3 +5,10 @@ torchvision
 pillow
 tqdm
 scipy
+pyarrow
+wandb
+tiktoken
+blobfile
+sentencepiece
+pandas
+av
