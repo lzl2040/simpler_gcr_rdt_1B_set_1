@@ -81,17 +81,21 @@ def eval_libero(args: Args) -> None:
         raise ValueError(f"Unknown task suite: {args.task_suite_name}")
 
     policy = get_model()
+    action_step = 10
+    tip = f"libero-goal-190K-eval-{args.task_suite_name}-action-step-{action_step}"
+    result_path = f"libero_results/{tip}.txt"
+    os.makedirs(os.path.dirname(result_path), exist_ok=True)
     total_episodes, total_successes = 0, 0
     for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
         # Get task
         task = task_suite.get_task(task_id)
-        text_embed = policy.encode_instruction(task)
 
         # Get default LIBERO initial states
         initial_states = task_suite.get_task_init_states(task_id)
 
         # Initialize LIBERO environment and task description
         env, task_description = _get_libero_env(task, LIBERO_ENV_RESOLUTION, args.seed)
+        text_embed = policy.encode_instruction(task_description)
 
         # Start episodes
         task_episodes, task_successes = 0, 0
@@ -163,7 +167,7 @@ def eval_libero(args: Args) -> None:
                     actions = policy.step(proprio, images, text_embed) # chunk(20) 7
 
                     # actions = actions[::4, :]
-                    actions = actions[:15]
+                    actions = actions[:action_step]
                     for idx in range(actions.shape[0]):
                         action = actions[idx]
                         print(f"action->{action}")
@@ -198,7 +202,7 @@ def eval_libero(args: Args) -> None:
 
             if total_episodes % 5 == 0 or done:
                 save_rollout_video(
-                    replay_images, total_episodes, success=done, task_description=task_description
+                    replay_images, total_episodes, success=done, task_description=task_description, tip=tip
                 )
 
             # Log current results
@@ -207,9 +211,13 @@ def eval_libero(args: Args) -> None:
             logging.info(f"# successes: {total_successes} ({total_successes / total_episodes * 100:.1f}%)")
 
         # Log final results
+        with open(result_path, "a+") as f:
+            f.write(f"{task_description} success rate: {float(task_successes) / float(task_episodes)}\n")
         logging.info(f"Current task success rate: {float(task_successes) / float(task_episodes)}")
         logging.info(f"Current total success rate: {float(total_successes) / float(total_episodes)}")
 
+    with open(result_path, "a+") as f:
+        f.write(f"Total success rate: {float(total_successes) / float(total_episodes)}")
     logging.info(f"Total success rate: {float(total_successes) / float(total_episodes)}")
     logging.info(f"Total episodes: {total_episodes}")
 
@@ -218,7 +226,7 @@ DATE_TIME = time.strftime("%Y_%m_%d-%H_%M_%S")
 
 def save_rollout_video(rollout_images, idx, success, task_description, log_file=None, tip=""):
     """Saves an MP4 replay of an episode."""
-    rollout_dir = f"./rollouts/{DATE}"
+    rollout_dir = f"./rollouts-{tip}/{DATE}"
     os.makedirs(rollout_dir, exist_ok=True)
     processed_task_description = task_description.lower().replace(" ", "_").replace("\n", "_").replace(".", "_")[:50]
     mp4_path = f"{rollout_dir}/{DATE_TIME}--episode={idx}--success={success}--task={processed_task_description}.mp4"
@@ -289,7 +297,7 @@ def get_model():
         config = yaml.safe_load(fp)
     pretrained_text_encoder_name_or_path = "/Data/lzl/weights/rdt_param/t5-v1_1-xxl"
     pretrained_vision_encoder_name_or_path = "/Data/lzl/weights/rdt_param/siglip-so400m-patch14-384"
-    pretrained_path = "/Data/lzl/rdt-ft-simulated/0422-rdt-libero-all/checkpoint-90000/pytorch_model/mp_rank_00_model_states.pt"
+    pretrained_path = "/Data/lzl/rdt-ft-simulated/0424-libero-goal/checkpoint-190000/pytorch_model/mp_rank_00_model_states.pt"
     policy = create_model(
         args=config, 
         dtype=torch.bfloat16,

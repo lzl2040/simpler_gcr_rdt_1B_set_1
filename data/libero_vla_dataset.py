@@ -203,7 +203,7 @@ class HDF5VLADataset:
         # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
         #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
         LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_goal_no_noops_lerobot"
-        # LEROBOT_DIR = "/Data/lerobot_data/simulated/libero_all"
+        # LEROBOT_DIR = "/Data/lerobot_data/simulated/libero_goal_no_noops_lerobot"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
         self.DATASET_NAME = "libero"

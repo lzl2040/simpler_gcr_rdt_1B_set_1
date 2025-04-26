@@ -19,6 +19,7 @@ from data.libero_vla_dataset import HDF5VLADataset
 # from data.pizza_vla_dataset import HDF5VLADataset
 # from data.hdf5_vla_dataset import HDF5VLADataset
 from train.image_corrupt import image_corrupt
+from train.img_aug import RandomSubsetWeightedTransform, ImageTransformConfig
 
 
 def get_clean_item(chunk_dir):
@@ -142,6 +143,18 @@ class VLAConsumerDataset(Dataset):
         self.image_size = image_size
         self.auto_adjust_image_brightness = auto_adjust_image_brightness
         self.image_aug = image_aug
+        transform_configs = {
+            "brightness": ImageTransformConfig(1.0, "ColorJitter", {"brightness": (0.8, 1.2)}),
+            "contrast": ImageTransformConfig(1.0, "ColorJitter", {"contrast": (0.8, 1.2)}),
+            "saturation": ImageTransformConfig(1.0, "ColorJitter", {"saturation": (0.5, 1.5)}),
+            "hue": ImageTransformConfig(1.0, "ColorJitter", {"hue": (-0.05, 0.05)}),
+            "sharpness": ImageTransformConfig(1.0, "SharpnessJitter", {"sharpness": (0.5, 1.5)}),
+            "crop_resize": ImageTransformConfig(1.0, "RandomResizedCrop", {"size": (256, 256), "scale": (0.9, 0.95), "ratio": (1.0, 1.0)}),
+            "rotate": ImageTransformConfig(1.0, "RandomRotate", {"degrees": (-5, 5)}),
+        }
+        self.random_transform = RandomSubsetWeightedTransform(transform_configs, 
+                                                              n_subset=3, 
+                                                              random_order=True)
         
         self.last_content = None
         self.last_meta = None
@@ -319,21 +332,23 @@ class VLAConsumerDataset(Dataset):
                         image = transforms.Resize(self.image_size)(image) # (1008, 336)
                     # assert image.height == 336, "We haven't prepare for training with images of different resolutions."
                     
-                    if valid and self.auto_adjust_image_brightness:
-                        pixel_values = list(image.getdata())
-                        average_brightness = sum(sum(pixel) for pixel in pixel_values) / (len(pixel_values) * 255.0 * 3)
-                        if average_brightness <= 0.15:
-                            image = transforms.ColorJitter(brightness=(1.75,1.75))(image)
+                    # if valid and self.auto_adjust_image_brightness:
+                    #     pixel_values = list(image.getdata())
+                    #     average_brightness = sum(sum(pixel) for pixel in pixel_values) / (len(pixel_values) * 255.0 * 3)
+                    #     if average_brightness <= 0.15:
+                    #         image = transforms.ColorJitter(brightness=(1.75,1.75))(image)
                     
-                    # Only apply image augmentation to 50% of the images
-                    if valid and self.image_aug and (random.random() > 0.5):
-                        aug_type = random.choice([
-                            "corrput_only", "color_only", "both"])
-                        if aug_type != "corrput_only":
-                            image = transforms.ColorJitter(
-                                brightness=0.3, contrast=0.4, saturation=0.5, hue=0.03)(image)
-                        if aug_type != "color_only":
-                            image = image_corrupt(image)
+                    # # Only apply image augmentation to 50% of the images
+                    # if valid and self.image_aug and (random.random() > 0.5):
+                    #     aug_type = random.choice([
+                    #         "corrput_only", "color_only", "both"])
+                    #     if aug_type != "corrput_only":
+                    #         image = transforms.ColorJitter(
+                    #             brightness=0.3, contrast=0.4, saturation=0.5, hue=0.03)(image)
+                    #     if aug_type != "color_only":
+                    #         image = image_corrupt(image)
+                    
+                    image = self.random_transform(image)
                     
                     if self.image_aspect_ratio == 'pad':
                         def expand2square(pil_img, background_color):
