@@ -15,7 +15,8 @@ import transformers
 
 from data.filelock import FileLock
 # from data.simpler_vla_dataset import HDF5VLADataset
-from data.libero_vla_dataset import HDF5VLADataset
+# from data.libero_vla_dataset import HDF5VLADataset
+from data.simpler_lerobot_vla_dataset import HDF5VLADataset
 # from data.pizza_vla_dataset import HDF5VLADataset
 # from data.hdf5_vla_dataset import HDF5VLADataset
 from train.image_corrupt import image_corrupt
@@ -332,23 +333,25 @@ class VLAConsumerDataset(Dataset):
                         image = transforms.Resize(self.image_size)(image) # (1008, 336)
                     # assert image.height == 336, "We haven't prepare for training with images of different resolutions."
                     
-                    # if valid and self.auto_adjust_image_brightness:
-                    #     pixel_values = list(image.getdata())
-                    #     average_brightness = sum(sum(pixel) for pixel in pixel_values) / (len(pixel_values) * 255.0 * 3)
-                    #     if average_brightness <= 0.15:
-                    #         image = transforms.ColorJitter(brightness=(1.75,1.75))(image)
+                    # raw
+                    if valid and self.auto_adjust_image_brightness:
+                        pixel_values = list(image.getdata())
+                        average_brightness = sum(sum(pixel) for pixel in pixel_values) / (len(pixel_values) * 255.0 * 3)
+                        if average_brightness <= 0.15:
+                            image = transforms.ColorJitter(brightness=(1.75,1.75))(image)
                     
-                    # # Only apply image augmentation to 50% of the images
-                    # if valid and self.image_aug and (random.random() > 0.5):
-                    #     aug_type = random.choice([
-                    #         "corrput_only", "color_only", "both"])
-                    #     if aug_type != "corrput_only":
-                    #         image = transforms.ColorJitter(
-                    #             brightness=0.3, contrast=0.4, saturation=0.5, hue=0.03)(image)
-                    #     if aug_type != "color_only":
-                    #         image = image_corrupt(image)
+                    # Only apply image augmentation to 50% of the images
+                    if valid and self.image_aug and (random.random() > 0.5):
+                        aug_type = random.choice([
+                            "corrput_only", "color_only", "both"])
+                        if aug_type != "corrput_only":
+                            image = transforms.ColorJitter(
+                                brightness=0.3, contrast=0.4, saturation=0.5, hue=0.03)(image)
+                        if aug_type != "color_only":
+                            image = image_corrupt(image)
                     
-                    image = self.random_transform(image)
+                    # our
+                    # image = self.random_transform(image)
                     
                     if self.image_aspect_ratio == 'pad':
                         def expand2square(pil_img, background_color):

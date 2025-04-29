@@ -349,7 +349,7 @@ def train(args, logger):
                                         {
                                             "entity": "ucas_lzl",
                                             
-                                            "name": "04-26-ft-libero-goal-img-aug-1st"
+                                            "name": "04-29-ft-simpler-fractal-1st"
                                         }
                                     }
                                 )
