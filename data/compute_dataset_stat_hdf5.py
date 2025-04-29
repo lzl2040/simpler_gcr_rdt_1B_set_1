@@ -13,7 +13,8 @@ sys.path.append("/home/v-wangxiaofa/lzl/simpler_gcr_rdt_1B_set_1")
 # from data.simpler_vla_dataset import HDF5VLADataset
 # from data.pizza_vla_dataset import HDF5VLADataset
 # from data.hdf5_vla_dataset import HDF5VLADataset
-from data.libero_vla_dataset import HDF5VLADataset
+# from data.libero_vla_dataset import HDF5VLADataset
+from data.simpler_lerobot_vla_dataset import HDF5VLADataset
 
 
 def process_hdf5_dataset(vla_dataset):

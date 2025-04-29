@@ -216,7 +216,7 @@ class HDF5VLADataset:
         # LEROBOT_DIR = "/Data/lerobot_data/simulated/simpler_bridge"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
-        self.DATASET_NAME = "simpler_lerobot"
+        self.DATASET_NAME = "simpler_fractal"
         self.emb_path = ""
         
         self.file_paths = []
