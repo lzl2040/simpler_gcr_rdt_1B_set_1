@@ -8,6 +8,11 @@ from accelerate.logging import get_logger
 def parse_args(input_args=None):
     parser = argparse.ArgumentParser(description="Main script for training RDT.")
     parser.add_argument(
+        "--wandb_project_name",
+        type=str,
+        default="04-29-ft-simpler-fractal-1st"
+    )
+    parser.add_argument(
         "--config_path",
         type=str,
         default="configs/base.yaml",

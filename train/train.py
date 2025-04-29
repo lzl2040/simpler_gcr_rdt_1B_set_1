@@ -254,7 +254,7 @@ def train(args, logger):
         cam_ext_mask_prob=args.cam_ext_mask_prob,
         state_noise_snr=args.state_noise_snr,
         use_hdf5=args.load_from_hdf5,
-        use_precomp_lang_embed=args.precomp_lang_embed,
+        use_precomp_lang_embed=args.precomp_lang_embed
     )
     sample_dataset = VLAConsumerDataset(
         config=config["dataset"],
@@ -268,7 +268,7 @@ def train(args, logger):
         cam_ext_mask_prob=-1,
         state_noise_snr=None,
         use_hdf5=args.load_from_hdf5,
-        use_precomp_lang_embed=args.precomp_lang_embed,
+        use_precomp_lang_embed=args.precomp_lang_embed
     )                              
     
     data_collator = DataCollatorForVLAConsumerDataset(tokenizer)                                                        
@@ -349,7 +349,7 @@ def train(args, logger):
                                         {
                                             "entity": "ucas_lzl",
                                             
-                                            "name": "04-29-ft-simpler-fractal-1st"
+                                            "name": args.wandb_project_name
                                         }
                                     }
                                 )
