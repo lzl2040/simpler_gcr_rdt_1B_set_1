@@ -42,8 +42,8 @@ python main.py \
     --pretrained_text_encoder_name_or_path=$TEXT_ENCODER_NAME \
     --pretrained_vision_encoder_name_or_path=$VISION_ENCODER_NAME \
     --output_dir=$OUTPUT_DIR \
-    --train_batch_size=6 \
-    --sample_batch_size=4 \
+    --train_batch_size=4 \
+    --sample_batch_size=2 \
     --max_train_steps=200000 \
     --checkpointing_period=10000 \
     --sample_period=20000000 \
