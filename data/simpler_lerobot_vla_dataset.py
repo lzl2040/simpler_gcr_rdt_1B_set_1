@@ -212,11 +212,11 @@ class HDF5VLADataset:
         # Each HDF5 file contains one episode
         # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
         #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-        LEROBOT_DIR = f"/mnt/wangxiaofa/robot_dataset/lerobot-format/simpler_bridge"
+        LEROBOT_DIR = f"/mnt/wangxiaofa/robot_dataset/lerobot-format/simpler_fractal"
         # LEROBOT_DIR = "/Data/lerobot_data/simulated/simpler_bridge"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
-        self.DATASET_NAME = "simpler_bridge"
+        self.DATASET_NAME = "simpler_fractal"
         self.emb_path = ""
         
         self.file_paths = []
