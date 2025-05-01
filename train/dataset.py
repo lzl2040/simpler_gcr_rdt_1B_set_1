@@ -99,7 +99,7 @@ class VLAConsumerDataset(Dataset):
         cam_ext_mask_prob=-1.0,
         state_noise_snr=None,
         use_hdf5=False,
-        use_precomp_lang_embed=False
+        use_precomp_lang_embed=False,
     ):
         super(VLAConsumerDataset, self).__init__()
         
