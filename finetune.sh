@@ -42,8 +42,8 @@ python main.py \
     --pretrained_text_encoder_name_or_path=$TEXT_ENCODER_NAME \
     --pretrained_vision_encoder_name_or_path=$VISION_ENCODER_NAME \
     --output_dir=$OUTPUT_DIR \
-    --train_batch_size=4 \
-    --sample_batch_size=2 \
+    --train_batch_size=2 \
+    --sample_batch_size=1 \
     --max_train_steps=200000 \
     --checkpointing_period=10000 \
     --sample_period=20000000 \
@@ -58,7 +58,7 @@ python main.py \
     --load_from_hdf5 \
     --report_to=wandb \
     --resume_from_checkpoint="latest" \
-    --wandb_project_name="0429-ft-simpler-fractal"
+    --wandb_project_name="0501-ft-simpler-fractal"
     # --precomp_lang_embed \
     # --mixed_precision="bf16" \
 
