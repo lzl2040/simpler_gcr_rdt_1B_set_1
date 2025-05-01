@@ -14,7 +14,10 @@ import json
 import torchvision
 import importlib
 import logging
+import gc
 
+
+# from datasets import load_dataset
 
 def get_safe_default_codec():
     if importlib.util.find_spec("torchcodec"):
@@ -212,11 +215,11 @@ class HDF5VLADataset:
         # Each HDF5 file contains one episode
         # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
         #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-        LEROBOT_DIR = f"/mnt/wangxiaofa/robot_dataset/lerobot-format/simpler_fractal"
+        LEROBOT_DIR = f"/mnt/wangxiaofa/robot_dataset/lerobot-format/simpler_bridge"
         # LEROBOT_DIR = "/Data/lerobot_data/simulated/simpler_bridge"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
-        self.DATASET_NAME = "simpler_fractal"
+        self.DATASET_NAME = "simpler_bridge"
         self.emb_path = ""
         
         self.file_paths = []
@@ -226,6 +229,9 @@ class HDF5VLADataset:
             for file in files:
                 if file.endswith(".parquet"):
                     self.file_paths.append(os.path.join(root, file))
+        
+        # self.hf_dataset = load_dataset("parquet", data_files=self.file_paths, split="train")
+        # self.dataset_len = len(self.hf_dataset)
         
         print("There are {} episodes in the dataset.".format(len(self.file_paths)))
         meta_path = os.path.join(LEROBOT_DIR, "meta")
@@ -266,6 +272,10 @@ class HDF5VLADataset:
         else:
             print("Generating episode sample weights from raw data")
             episode_lens = []
+            # for i in range(self.dataset_len):
+            #     valid, res = self.parese_parquet_file_state_only(i)
+            #     _len = res['state'].shape[0] if valid else 0
+            #     episode_lens.append(_len)
             for file_path in tqdm(self.file_paths, desc="Generating weights from raw data"):
                 valid, res = self.parese_parquet_file_state_only(file_path)
                 _len = res['state'].shape[0] if valid else 0
@@ -300,10 +310,16 @@ class HDF5VLADataset:
         return new_states
     
     def parese_parquet_file_state_only(self, file_path):
+    # def parese_parquet_file_state_only(self, i):
+    #     item = self.hf_dataset[i]
+    #     actions = item["action"]
+    #     states = item["observation.state"]
+    #     ep_id = item["episode_index"]
+    #     print(actions)
         data = pq.read_table(
             file_path,
-            use_threads=True,  # 启用多线程
-            memory_map=True    # 内存映射文件加速
+            use_threads=False,  # 启用多线程
+            memory_map=False    # 内存映射文件加速
         ).to_pandas()
         actions = np.stack(data["action"].values)
         states = np.stack(data["observation.state"].values) # x, y, z, quat, gripper
@@ -332,6 +348,8 @@ class HDF5VLADataset:
         states = fill_in_state(states)
         actions = fill_in_state(actions)
         
+        del data
+        gc.collect()
         return True, {
             "state": states,
             "action": actions
@@ -382,8 +400,8 @@ class HDF5VLADataset:
 
         data = pq.read_table(
             file_path,
-            use_threads=True,  # 启用多线程
-            memory_map=True    # 内存映射文件加速
+            use_threads=False,  # 启用多线程
+            memory_map=False    # 内存映射文件加速
         ).to_pandas()
         actions = np.stack(data["action"].values)
         states = np.stack(data["observation.state"].values)
@@ -500,6 +518,9 @@ class HDF5VLADataset:
         cam_high = unavailable_img()
         cam_high_mask = cam_right_wrist_mask.copy()
 
+        
+        del data
+        gc.collect()
         return True, {
             "meta": meta,
             "state": state,
