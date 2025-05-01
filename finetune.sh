@@ -9,7 +9,7 @@ export NCCL_NVLS_ENABLE=0
 export VISION_ENCODER_NAME="/mnt/wangxiaofa/RDT_module_params/rdt_param/siglip-so400m-patch14-384"
 export TEXT_ENCODER_NAME="/mnt/wangxiaofa/RDT_module_params/rdt_param/t5-v1_1-xxl"
 # export OUTPUT_DIR="/mnt/wangxiaofa/rdt_checkpoint/170M_ac8_bs32x8_last_padding/"
-export OUTPUT_DIR="/mnt/wangxiaofa/rdt-ft-simulated/0501-ft-simpler-bridge"
+export OUTPUT_DIR="/mnt/wangxiaofa/rdt-ft-simulated/0501-ft-simpler-fractal"
 export PRETRAIN_MODEL_PATH="/mnt/wangxiaofa/RDT_module_params/rdt_param/rdt-1b/"
 
 # export TEXT_ENCODER_NAME="/datahdd_8T/vla_pizza/RDT_module_params/t5-v1_1-xxl/"
@@ -42,7 +42,7 @@ python main.py \
     --pretrained_text_encoder_name_or_path=$TEXT_ENCODER_NAME \
     --pretrained_vision_encoder_name_or_path=$VISION_ENCODER_NAME \
     --output_dir=$OUTPUT_DIR \
-    --train_batch_size=6 \
+    --train_batch_size=12 \
     --sample_batch_size=1 \
     --max_train_steps=200000 \
     --checkpointing_period=10000 \
@@ -58,7 +58,7 @@ python main.py \
     --load_from_hdf5 \
     --report_to=wandb \
     --resume_from_checkpoint="latest" \
-    --wandb_project_name="0501-ft-simpler-bridge"
+    --wandb_project_name="0501-ft-simpler-fractal"
     # --precomp_lang_embed \
     # --mixed_precision="bf16" \
 
