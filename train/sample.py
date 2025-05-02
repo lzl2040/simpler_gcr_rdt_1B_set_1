@@ -73,7 +73,7 @@ def log_sample_res(
             for loss_suffix, losses in zip(["_sample_mse", "_sample_l2err"], [mse_losses, l2_losses]):
                 for dataset_idx, loss_tensor in zip(dataset_indices, losses):
                     # loss_name = dataset_id2name[dataset_idx] + loss_suffix
-                    loss_name = "simpler_bridge" + loss_suffix
+                    loss_name = "simpler_fractal" + loss_suffix
                     loss_for_log[loss_name] += loss_tensor.item()
                     loss_counter[loss_name] += 1
         
