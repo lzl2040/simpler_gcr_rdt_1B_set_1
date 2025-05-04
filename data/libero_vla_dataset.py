@@ -201,8 +201,8 @@ class HDF5VLADataset:
         # [Modify] The path to the HDF5 dataset directory
         # Each HDF5 file contains one episode
         # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
-        #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-        LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_goal_no_noops_lerobot"
+        #           "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot", "libero_all"]
+        LEROBOT_DIR = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_all"
         # LEROBOT_DIR = "/Data/lerobot_data/simulated/libero_goal_no_noops_lerobot"
         # HDF5_DIR = "/datassd_1T/dataset_cache/simpler_data"
         WEIGHT_FILE = "episode_sample_weights.npy"
@@ -268,7 +268,6 @@ class HDF5VLADataset:
     def get_dataset_name(self):
         return self.DATASET_NAME
     
-
     def get_ortho6d_from_euler_angle(self, states):
         new_states = []
         for i in range(len(states)):
