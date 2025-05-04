@@ -15,8 +15,8 @@ import transformers
 
 from data.filelock import FileLock
 # from data.simpler_vla_dataset import HDF5VLADataset
-# from data.libero_vla_dataset import HDF5VLADataset
-from data.simpler_lerobot_vla_dataset import HDF5VLADataset
+from data.libero_vla_dataset import HDF5VLADataset
+# from data.simpler_lerobot_vla_dataset import HDF5VLADataset
 # from data.pizza_vla_dataset import HDF5VLADataset
 # from data.hdf5_vla_dataset import HDF5VLADataset
 from train.image_corrupt import image_corrupt
