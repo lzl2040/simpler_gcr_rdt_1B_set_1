@@ -2,7 +2,6 @@ import os
 import fnmatch
 import json
 import yaml
-import cv2
 import numpy as np
 
 from scipy.spatial.transform import Rotation as R
