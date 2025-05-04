@@ -21,10 +21,8 @@ tensorflow_graphics==2021.12.3
 timm==0.9.10
 tqdm
 transformers
-torch
 opencv-python
 numpy
-torchvision
 pillow
 tqdm
 scipy
